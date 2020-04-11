@@ -4,12 +4,26 @@ const initState = {
 
 const authReducer = (state = initState, action) => {
     switch(action.type){
+        case 'EDIT_ERROR':
+            console.log('edit error')
+            return{
+                ...state,
+                authError: 'edit failed'
+            }
+        case 'EDIT_SUCCESS':
+            console.log('edit sucess')
+            return{
+                ...state,
+                authError: null
+            }
+
         case 'LOGIN_ERROR':
             console.log('login error')
             return{
                 ...state,
                 authError: 'Login failed'
             }
+
         case 'LOGIN_SUCCESS':
             console.log('login sucess')
             return{
@@ -33,8 +47,10 @@ const authReducer = (state = initState, action) => {
                 ...state,
                 authError: action.err.message
             }
+            
         default: 
         return state
+
     }
     
 }

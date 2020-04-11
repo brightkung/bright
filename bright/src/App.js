@@ -7,6 +7,7 @@ import ProjectDetails from './components/projects/ProjectDetails'
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import CreateProject from './components/projects/CreateProject';
+import profileBuild from './components/layout/profileBuild'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path='/signup' component={SignUp} />
           <Route path='/createproject' component={CreateProject} />
           <Route path='/cart' component ={shoppingcart} />
+          <Route path='/profileBuild' component={profileBuild} />
         </Switch>
       </div>
     </BrowserRouter>

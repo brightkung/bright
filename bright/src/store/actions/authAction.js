@@ -13,6 +13,26 @@ export const signIn = (credentials) => {
     }
 }
 
+export const editProfile = (pro) => {
+    return( dispatch , getState , { getFirebase , getFirestore}) => {
+        const firebase =  getFirebase();
+        const firestore = getFirestore();
+  
+        firebase.auth().createUserWithEmailAndPassword(
+        ).then((resp) => {
+            return firestore.collection('users').doc(resp.user.uid).update({
+                firstName: pro.firstName,
+                lastName: pro.lastName,
+                initials: pro.firstName[0]+pro.lastName[0]
+            })
+        }).then(() => {
+            dispatch({ type: 'EDIT_SUCCESS'})
+        }).catch(err => {
+            dispatch({ type : 'EDIT_ERROR',err})
+        })
+    }
+}
+
 export const signOut = () => {
     return( dispatch,getState, { getFirebase }) => {
         const firebase = getFirebase();
@@ -39,7 +59,10 @@ export const signUp = (newUser) => {
             return firestore.collection('users').doc(resp.user.uid).set({
                 firstName: newUser.firstName,
                 lastName: newUser.lastName,
-                initials: newUser.firstName + "  "  +newUser.lastName
+                initials: newUser.firstName + "  "  +newUser.lastName,
+                phone:newUser.phone,
+                address:newUser.address
+
             })
         }).then(() => {
             dispatch({ type: 'SIGNUP_SUCCESS'})

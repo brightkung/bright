@@ -1,24 +1,26 @@
 import React, { Component } from 'react'
 import FileUpload from './FileUpload'
 import { createProject } from '../../store/actions/projectActions'
-import { connect} from  'react-redux'
+import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
-import {storage} from '../../config/fbConfig.js';
+import { storage } from '../../config/fbConfig.js';
 import 'firebase/storage';
 import firebase from "firebase";
 import FileUploader from "react-firebase-file-uploader";
+import PreviewPicture from './PreviewPicture'
+
+
 class CreateProject extends Component {
 
     state = {
         title: '',
         content: '',
         price: '',
-        balance:0,
-        
-        url:'',progress: 0,
+
+        url: '', progress: 0,
         avatarURL: ""
     }
-    
+
     handleChange = (e) => {
         this.setState({
             [e.target.id]: e.target.value
@@ -33,17 +35,17 @@ class CreateProject extends Component {
     handleUploadSuccess = filename => {
         this.setState({ avatar: filename, progress: 100, isUploading: false });
         firebase
-          .storage()
-          .ref("images")
-          .child(filename)
-          .getDownloadURL()
-          .then(url => this.setState({ avatarURL: url }));
-      };
+            .storage()
+            .ref("images")
+            .child(filename)
+            .getDownloadURL()
+            .then(url => this.setState({ avatarURL: url }));
+    };
 
     render() {
-        
+
         const { auth } = this.props
-        if(!auth.uid) return <Redirect to='/signin' />
+        if (!auth.uid) return <Redirect to='/signin' />
 
         return (
             <div className='container'>
@@ -55,38 +57,35 @@ class CreateProject extends Component {
 
                     <div className='input-field'>
                         <label htmlFor='title'>Title</label>
-                        <input type='text' id='title' onChange={this.handleChange}/>
+                        <input type='text' id='title' onChange={this.handleChange} />
                     </div>
 
                     <div className='input-field'>
                         <label htmlFor='content'>Product Detail</label>
                         <textarea id='content' className='materialize-textarea' onChange={this.handleChange}></textarea>
                     </div>
-                    <div className='input-field'>
-                        <label htmlFor='balance'>Balance</label>
-                        <input id='balance'  onChange={this.handleChange}></input>
-                    </div>
 
-            
+
 
                     <div className='input-field'>
                         <label htmlFor='price'>Price฿</label>
                         <textarea id='price' className='materialize-textarea' onChange={this.handleChange}></textarea>
                     </div>
-                    
+
                     <FileUploader
-            accept="image/*"
-            name="avatar"
-            randomizeFilename
-            storageRef={firebase.storage().ref("images")}
-            onUploadStart={this.handleUploadStart}
-            onUploadError={this.handleUploadError}
-            onUploadSuccess={this.handleUploadSuccess}
-            onProgress={this.handleProgress}
-          />
+                        accept="image/*"
+                        name="avatar"
+                        randomizeFilename
+                        storageRef={firebase.storage().ref("images")}
+                        onUploadStart={this.handleUploadStart}
+                        onUploadError={this.handleUploadError}
+                        onUploadSuccess={this.handleUploadSuccess}
+                        onProgress={this.handleProgress}
+                    />
+                    <PreviewPicture avatarURL={this.state.avatarURL} />
 
                     <div className='input-field'>
-                        <button  className='btn pink lighten-1 z-depth-0'>Upload</button>
+                        <button className='btn pink lighten-1 z-depth-0'>Upload</button>
                     </div>
 
                 </form>
@@ -102,8 +101,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return{
+    return {
         createProject: (project) => dispatch(createProject(project))
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(CreateProject)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateProject)

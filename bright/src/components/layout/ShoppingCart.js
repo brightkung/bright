@@ -1,73 +1,81 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import SignedInLinks from './SignedInLinks'
 import SignedOutLinks from './SignedOutLinks'
 import { connect } from  'react-redux'
-import { Row,Col,Form,Nav,Table} from 'reactstrap';
+import { Card,Row,Col,Form,Nav,Table} from 'reactstrap';
 import { Redirect  } from 'react-router-dom'
 import firebase from 'firebase/app'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose} from 'redux'
 
 
-
 let market = []
-let markets = []
+    let markets = []
+    let getDoc
 
 
+const show = (props) => {
+    
+    
+    
+   
+    
+    
+}
 const shoppingcart = (props) => {
+
     const { projects , auth , notification } = props
-    
-    
     const db = firebase.firestore();
     db.settings({timestampsInSnapshots:true});
-    var getDoc = db.collection('Cart').doc(auth.uid).get().then(doc => {
+    getDoc = db.collection('Cart').doc(auth.uid).get().then(doc => {
     let carts = doc.data().Cart
     let counts = doc.data().Count
-    for(let i = 0 ;i < carts.length;i++){
-        db.collection('products').doc(carts[i]).get().then(doc2 =>{
-            console.log(doc2.data().title)
-      
-        market.push(<h1>{doc2.data().title}</h1>)
-        market.push(<h1>{doc2.data().balance}</h1>)
-        market.push(<h1>{doc2.data().price}</h1>)
+     carts.map((cart,i) =>{
+
         
+        
+            db.collection('products').doc(cart).get().then(doc2 =>{
+            market.push(doc2.data)
+                       
+                
        
+            
         
-        console.log(market)
-        
-        console.log(2)
         
         })
-        console.log(market)
+      
     }
     
-    console.log(carts)
+    )
+    
+    console.log(market)
     console.log(counts)  
     
     
+    console.log(carts)
     })
-    console.log(market)
     
     
 
     //console.log(auth)
     
     
-    let eiei = [(<tr><th>asdasdasd</th></tr>)]
- 
-    return(
-        
-        
-            <div>
-                <Table style ={{color:'red'}}>
-               {market}
-                </Table>
-                </div>
-                
-      
+    let eiei = [market]
+
+    
+    const a = show(auth)
+    console.log(market)
+    return(<div>
+        <Table>
+    <h2>{eiei}</h2>
+       
+       </Table>
+        </div>
 
     )
+    
+   
     
 }
 

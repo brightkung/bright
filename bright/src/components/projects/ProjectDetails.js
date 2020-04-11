@@ -2,23 +2,61 @@ import React,{ useState } from 'react'
 
 import {  connect } from 'react-redux'
 import { firestoreConnect} from 'react-redux-firebase'
-import * as firebase from 'firebase/app'
+import firebase from 'firebase/app'
 import 'firebase/firestore'
 import { compose } from 'redux'
-import { Redirect } from 'react-router-dom'
+import { Redirect ,Link } from 'react-router-dom'
 import moment from 'moment'
 //import {firebase} from '../../config/fbConfig';
 import { Row,Col,Form,Nav, Card,CardBody,CardTitle, CardImg, Button} from 'reactstrap';
+const getIndex = (value, arr) => {
+    for(var i = 0; i < arr.length; i++) {
+        if(arr[i] === value) {
+            return i;
+        }
+    }
+}
 const AddItem = (props) => {
+   
+    const project = props[0]
+    const auth = props[1]
+    const add = props[2]
     const db = firebase.firestore();
     db.settings({timestampsInSnapshots:true});
-    db.collection('Cart').get().then((snapshot) => {
-        snapshot.docs.forEach(doc => {
-            console.log(doc.data())
-            doc.data().Cart.push(props)
-        })
+    console.log(auth)
+   
+    console.log(auth.uid)
+    let Doc 
+    let count = []
+    var getDoc = db.collection('Cart').doc(auth.uid).get().then(doc => {
+        console.log(doc.data().Cart)
+        Doc = doc.data().Cart
+        count = doc.data().Count
+        
+        if(Doc.length == 0 ){
+            Doc.push(project.title)
+            count.push(1)
+            console.log(count.length)
+        }
+        if(getIndex(project.title, Doc) > -1){
+            count[getIndex(project.title, Doc)] += add
+        }
+        else{
+            Doc.push(project.title)
+            count.push(1)
+        }
+
+        
+        
+
+
+        db.collection('Cart').doc(auth.uid).set({
+            Cart: Doc,
+             Count:count
+          })
+        
     })
-    
+  
 }
 const ProjectDetails = (props) => {
     const [num, setnum] = useState(1);
@@ -53,7 +91,7 @@ const ProjectDetails = (props) => {
             <br />
            
            
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Button onClick = {(props) => {AddItem(props)}}>สั่งซื้อ</Button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Button onClick = {() => {AddItem([project,auth,num])}}>สั่งซื้อ</Button>
                 
             </div>
 

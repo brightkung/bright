@@ -88,7 +88,7 @@ const ProjracList = ({projects}) => {
         <Link onClick = {() => {setgofinds(finds);setfinds('')}} ><img style =  {{width :'50px',height:'50px'}} src='https://image.flaticon.com/icons/svg/428/428556.svg' alt="Logo" /></Link>
         </td>
         <td>
-        <Link><img style = {{width :'50px',height:'50px'}} src='https://image.flaticon.com/icons/svg/1069/1069102.svg' alt="Logo" /></Link>
+        <Link to='/cart' ><img style = {{width :'50px',height:'50px'}} src='https://image.flaticon.com/icons/svg/1069/1069102.svg' alt="Logo" /></Link>
             </td>
       </InputGroup>
       

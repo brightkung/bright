@@ -13,6 +13,7 @@ class CreateProject extends Component {
         title: '',
         content: '',
         price: '',
+        balance:0,
         
         url:'',progress: 0,
         avatarURL: ""
@@ -60,6 +61,10 @@ class CreateProject extends Component {
                     <div className='input-field'>
                         <label htmlFor='content'>Product Detail</label>
                         <textarea id='content' className='materialize-textarea' onChange={this.handleChange}></textarea>
+                    </div>
+                    <div className='input-field'>
+                        <label htmlFor='balance'>Balance</label>
+                        <input id='balance'  onChange={this.handleChange}></input>
                     </div>
 
             

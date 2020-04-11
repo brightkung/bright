@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Navbar from './components/layout/navbar'
+import shoppingcart from './components/layout/ShoppingCart'
 import Dashboard from './components/dashboard/Dashboard'
 import ProjectDetails from './components/projects/ProjectDetails'
 import SignIn from './components/auth/SignIn';
@@ -18,6 +19,7 @@ function App() {
           <Route path='/signin' component={SignIn} />
           <Route path='/signup' component={SignUp} />
           <Route path='/createproject' component={CreateProject} />
+          <Route path='/cart' component ={shoppingcart} />
         </Switch>
       </div>
     </BrowserRouter>

@@ -8,6 +8,7 @@ import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import CreateProject from './components/projects/CreateProject';
 import profileBuild from './components/layout/profileBuild'
+import mytable from './components/layout/mytable'
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
           <Route path='/signin' component={SignIn} />
           <Route path='/signup' component={SignUp} />
           <Route path='/createproject' component={CreateProject} />
-          <Route path='/cart' component ={shoppingcart} />
+          <Route path='/cart' component ={mytable} />
           <Route path='/profileBuild' component={profileBuild} />
         </Switch>
       </div>

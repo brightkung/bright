@@ -17,9 +17,7 @@ const Navbar = (props) => {
             <div className="container">
                   
                       
-                        <Link to='/'  >Shop &nbsp;&nbsp;&nbsp; </Link>
-
-                        <Link to='/' >Home</Link>
+            <Link to='/' className="brand-logo">Shop &nbsp;&nbsp;&nbsp; </Link>
 
                        
                    

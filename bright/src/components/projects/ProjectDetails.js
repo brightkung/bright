@@ -1,5 +1,4 @@
 import React,{ useState } from 'react'
-
 import {  connect } from 'react-redux'
 import { firestoreConnect} from 'react-redux-firebase'
 import firebase from 'firebase/app'
@@ -17,14 +16,12 @@ const getIndex = (value, arr) => {
     }
 }
 const AddItem = (props) => {
-   
     const project = props[0]
     const auth = props[1]
     const add = props[2]
     const db = firebase.firestore();
     db.settings({timestampsInSnapshots:true});
     console.log(auth)
-   
     console.log(auth.uid)
     let Doc 
     let count = []
@@ -32,7 +29,6 @@ const AddItem = (props) => {
         console.log(doc.data().Cart)
         Doc = doc.data().Cart
         count = doc.data().Count
-        
         if(Doc.length == 0 ){
             Doc.push(project.title)
             count.push(1)
@@ -43,37 +39,28 @@ const AddItem = (props) => {
         }
         else{
             Doc.push(project.title)
-            count.push(1)
+            count.push(add)
         }
-
-        
-        
-
-
         db.collection('Cart').doc(auth.uid).set({
             Cart: Doc,
              Count:count
           })
-        
     })
-  
 }
 const ProjectDetails = (props) => {
     const [num, setnum] = useState(1);
     const { project,auth } = props;
     if(!auth.uid) return <Redirect to='/signin' />
-  
     if(project){
         return(
-        <Row  style = {{backgroundColor:'white'}} >
-           
+        <Card style = {{backgroundColor:'white', width:900, margin:40, borderRadius:10}}>
+        <Row>  
         <Col className = 'center' >
                 <div >
                     <br />
                     <br />
                     <br />
-                     <img style = {{width :'300px',height:'200px'}} src= {project.avatarURL} alt ="Logo" />
-                
+                     <img style = {{width :'300px',height:'200px', borderRadius:10, marginLeft:30}} src= {project.avatarURL} alt ="Logo" />
                     </div>
         </Col>
         <Col style = {{width:'500px',height:'500px'}}>
@@ -89,16 +76,13 @@ const ProjectDetails = (props) => {
             &nbsp;&nbsp;&nbsp;{num}&nbsp;&nbsp;&nbsp;
             <Button onClick = {() =>{setnum(num+1)}}>+</Button><br />
             <br />
-           
-           
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<Button onClick = {() => {AddItem([project,auth,num])}}>สั่งซื้อ</Button>
-                
             </div>
-
         </div >
     </div>
         </Col>
     </Row>
+    </Card>
     )
     }else{
         return (
@@ -108,19 +92,16 @@ const ProjectDetails = (props) => {
         )
     }
 }
-
 const mapStateToProps = (state,ownProps) => {
     // console.log(state)
     const id = ownProps.match.params.id
     const projects = state.firestore.data.products
     const project = projects ? projects[id] : null
-
     return{
         project: project,
         auth: state.firebase.auth
     }
 };
-
 export default compose(
     connect(mapStateToProps),
     firestoreConnect([

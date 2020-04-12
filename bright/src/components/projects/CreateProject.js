@@ -16,7 +16,7 @@ class CreateProject extends Component {
         title: '',
         content: '',
         price: '',
-
+        balance: 0,
         url: '', progress: 0,
         avatarURL: ""
     }
@@ -53,7 +53,17 @@ class CreateProject extends Component {
 
                     <h5 className='grey-text text-darken-3'>Upload New Product</h5>
 
-                    <FileUpload />
+                    <FileUploader
+                        accept="image/*"
+                        name="avatar"
+                        randomizeFilename
+                        storageRef={firebase.storage().ref("images")}
+                        onUploadStart={this.handleUploadStart}
+                        onUploadError={this.handleUploadError}
+                        onUploadSuccess={this.handleUploadSuccess}
+                        onProgress={this.handleProgress}
+                    />
+                    <PreviewPicture avatarURL={this.state.avatarURL} />
 
                     <div className='input-field'>
                         <label htmlFor='title'>Title</label>
@@ -68,21 +78,16 @@ class CreateProject extends Component {
 
 
                     <div className='input-field'>
-                        <label htmlFor='price'>Price฿</label>
-                        <textarea id='price' className='materialize-textarea' onChange={this.handleChange}></textarea>
+                        <label htmlFor='price'>Price (THB)</label>
+                        <input type='number' id='price' onChange={this.handleChange} />
                     </div>
 
-                    <FileUploader
-                        accept="image/*"
-                        name="avatar"
-                        randomizeFilename
-                        storageRef={firebase.storage().ref("images")}
-                        onUploadStart={this.handleUploadStart}
-                        onUploadError={this.handleUploadError}
-                        onUploadSuccess={this.handleUploadSuccess}
-                        onProgress={this.handleProgress}
-                    />
-                    <PreviewPicture avatarURL={this.state.avatarURL} />
+                    <div className='input-field'>
+                        <label htmlFor='balance'>Balance</label>
+                        <input type='number' id='title' onChange={this.handleChange} />
+                        <input type="radio" id="male" name="gender" value="male" />
+                    </div>
+
 
                     <div className='input-field'>
                         <button className='btn pink lighten-1 z-depth-0'>Upload</button>

@@ -67,9 +67,13 @@ const ProjectDetails = (props) => {
         <div className='contianer section project-details'>
         <div className='card z-depth-0'>
             <div className='card-content'>
+                
                 <span className='card-title'>{project.title}</span>
+                <p>Detail</p>
                 <p>{project.content}</p>
-                <div>Price฿ {project.price}</div>
+                <h5>Price฿ {project.price}</h5>
+                <h5>Balance : {project.balance}</h5>
+
             </div>
             <div className='card-action gret lighten-4 grey-text'>
             <Button disabled = {num == 1} onClick = {() =>{if(num > 1) setnum(num-1)}}>-</Button>

@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Route,NavLink } from 'react-router-dom'
 import { editProfile } from '../../store/actions/authAction'
 import firebase from 'firebase/app'
 import { Button} from 'reactstrap';
 class profileBuild extends Component {
+    
    constructor(props){
        super(props)
        const { auth } = this.props
         this.state.authid  = auth.uid
-        this.start()
+        this.start();
    }
 
     state = {
@@ -39,18 +40,22 @@ class profileBuild extends Component {
         const db = firebase.firestore();
         db.settings({timestampsInSnapshots:true});
         const getDoc = db.collection('users').doc(this.state.authid).get().then(doc => {
-            this.state.firstName = doc.data().firstName
-            console.log(this.state.firstName)
-            this.state.lastName = doc.data().lastName
-            this.state.address = doc.data().address
-            this.state.phone = doc.data().phone
-            this.state.initials = doc.data().initials
+            this.setState({firstName:doc.data().firstName}) 
+            this.setState({lastName:doc.data().lastName}) 
+            this.setState({phone:doc.data().phone}) 
+            this.setState({initials:doc.data().initials}) 
+            this.setState({address:doc.data().address}) 
+            
             
         })
-       
+   
     }
+   
+
     setprofile = () => 
 {
+    const { auth } = this.props
+    this.state.authid  = auth.uid
     const db = firebase.firestore();
         db.settings({timestampsInSnapshots:true});
         console.log(this.state.address)
@@ -66,12 +71,11 @@ class profileBuild extends Component {
 
 }
 
-
+    
     render() {
-        console.log(this.props)
         
-        
-        
+       
+      
         
         return (
             
@@ -101,12 +105,13 @@ class profileBuild extends Component {
 
                     <div className='input-field'>
                         {/* <button className='btn red lighten-1 z-depth-0'>cancel</button> */}
-                        <Button onClick ={this.setprofile} >save</Button>
+                        <NavLink to='/'><Button onClick ={this.setprofile}>save</Button></NavLink>
                     </div>
 
                 </form>
             </div>
         )
+        
         
        
         

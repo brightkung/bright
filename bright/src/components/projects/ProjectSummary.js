@@ -9,7 +9,7 @@ const ProjectSummary = ({ project }) => {
             <CardBody>
                 <CardTitle classname='text-center'>{project.title}</CardTitle>
                 <p>฿ {project.price} </p>
-                <p>{project.content}</p>
+              
                 <Button>AddtoCard</Button>
             </CardBody>
         </Card>

@@ -84,7 +84,7 @@ class CreateProject extends Component {
 
                     <div className='input-field'>
                         <label htmlFor='balance'>Balance</label>
-                        <input type='number' id='title' onChange={this.handleChange} />
+                        <input type='number' id='balance' onChange={this.handleChange} />
                         <input type="radio" id="male" name="gender" value="male" />
                     </div>
 

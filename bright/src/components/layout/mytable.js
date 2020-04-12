@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState, Component} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -33,13 +33,16 @@ let getDoc
 let counts 
 let carts
 let num
-let rows = [];
+
 let rows2 = [];
 
+function refreshPage(){ 
+  window.location.reload(); 
+}
 
 
 const Editt = (props) => {
-  
+  let check = false
   let cart2 = []
   let count2 = []
   const db = firebase.firestore();
@@ -63,24 +66,45 @@ const Editt = (props) => {
         count2.push(counts[j])
       }
     }
+    check = true
     db.collection('Cart').doc(props[0].uid).set({
       Cart:cart2,Count:count2
     })
+    
+   
+    
 })
 
+
 }
-function useForceUpdate(){
-  const [value, setValue] = useState(0); // integer state
-  return () => setValue(value => ++value); // update the state to force render
+
+
+const componentDidUpdate = () =>{
+  {this.setState({rowss:[]})}
 }
-const SimpleTable = (props) => {
+
+const run = (props) => {
+  Editt([props[0],props[1]]) 
+  setTimeout(function() { //Start the timer
+    refreshPage()
+}.bind(this), 1500)
   
-  let num = 0
-  const [roweiei,setrow] = useState([])
-  const { auth } = props
+}
+
+class SimpleTable extends Component {
+  
+  constructor(props){
+    super(props)
+    const { auth } = this.props
+    
+    let num = 0
+    let rows = [];
+    this.setState({rowss:[]})
+    this.setState({au:auth})
+   
   
   
-  const classes = useStyles();
+    let check = 0
   const db = firebase.firestore();
   db.settings({ timestampsInSnapshots: true });
   getDoc = db.collection('Cart').doc(auth.uid).get().then(doc => {
@@ -88,21 +112,30 @@ const SimpleTable = (props) => {
     counts = doc.data().Count
     
     carts.map((cart, i) => {
+      check = 0
       
       db.collection('products').doc(cart).get().then(doc2 => {
-        
-        if(rows.length < carts.length && cart == doc2.data().title){
+        console.log(cart)
+        console.log(doc2.data().title)
+        if(rows.length < carts.length && cart == doc2.data().title  ){
           console.log(doc2.data().title)
-          rows.push(createData(doc2.data().title,counts[i],doc2.data().price,<Button onClick = {() => {Editt([auth,doc2.data().title])}}>Delete</Button>))
+          this.setState({sum:this.state.sum+=(counts[i]*doc2.data().price)})
+          rows.push(createData(doc2.data().title,counts[i],doc2.data().price,<Button onClick = {() => {run([auth,doc2.data().title])}}>ลบ</Button>))
           num++
+          check++
         
         }
 
           
        console.log(rows)
+        this.setState({rowsss:rows})
+        this.setState({rowss:this.state.rowsss})
+        this.setState({rowsss:[]})
+
         
       })
-      setrow(rows)
+      
+
       
     }
     
@@ -110,18 +143,51 @@ const SimpleTable = (props) => {
     
   
   })
+  }
   
   
-  useForceUpdate()
+  state = {
+    rowss:[],
+    rowsss:[],
+    sum:0,
+    au:''
+};
+checkout (props) {
+  const db = firebase.firestore();
+  db.settings({ timestampsInSnapshots: true });
+  getDoc = db.collection('Cart').doc(props.uid).get().then(doc => {
+    carts = doc.data().Cart
+    counts = doc.data().Count
+    db.collection('Order').doc(props.uid).set({
+      Cart: carts ,Count:counts,url:''
+    })
+  })
+  setTimeout(function() { //Start the timer
+    db.collection('Cart').doc(props.uid).set({
+      Cart: [],Count:[]
+    })
+    setTimeout(function() { //Start the timer
+     refreshPage()
+  }.bind(this), 1500)
+}.bind(this), 1500)
+  
+  
+}
+
+  render () {
+    const { auth } = this.props
+    
+  
+  
   return (
     <TableContainer component={Paper} >
-      <Table className={classes.table} aria-label="simple table">
+      <Table  aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Products</TableCell>
             <TableCell align="right">Quantity</TableCell>
             <TableCell align="right">Price (THB)&nbsp;</TableCell>
-            <TableCell align="right">Edit</TableCell>
+            <TableCell align="right">ลบ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TableCell>
           
             {/* <TableCell align="right">Carbs&nbsp;(g)</TableCell>
             <TableCell align="right">Protein&nbsp;(g)</TableCell> */}
@@ -131,26 +197,37 @@ const SimpleTable = (props) => {
         <TableBody>
 
 
-
+          
          
-          {roweiei.map((row) => (
+          {this.state.rowss.map((row) => (
+            
             <TableRow key={row.name}>
               <TableCell component="th" scope="row">{row.name}</TableCell>
 
               <TableCell align="right">{row.calories}</TableCell>
               <TableCell align="right">{row.fat}</TableCell>
+              
               <TableCell align="right">{row.carbs}</TableCell>
               {/* <TableCell align="right">{row.carbs}</TableCell>
               <TableCell align="right">{row.protein}</TableCell> */}
             </TableRow>
           ))}
+          <TableCell align="right"></TableCell>
+          <TableCell align="right"></TableCell>
+            <TableCell align="right">ราคารวม {this.state.sum}</TableCell>
           
-
+          <TableCell  align="right"><Button disabled = {false} onClick = {() =>{this.checkout(auth)}}>สั่งซื้อ</Button></TableCell>
+         
+          
+          
 
         </TableBody>
       </Table>
     </TableContainer>
+    
   );
+            }
+          
 }
 
 

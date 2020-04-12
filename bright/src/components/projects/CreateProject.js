@@ -10,6 +10,9 @@ import FileUploader from "react-firebase-file-uploader";
 import PreviewPicture from './PreviewPicture'
 
 
+
+
+
 class CreateProject extends Component {
 
     state = {
@@ -18,7 +21,8 @@ class CreateProject extends Component {
         price: '',
         balance: 0,
         url: '', progress: 0,
-        avatarURL: ""
+        avatarURL: "",
+        catValue: ""
     }
 
     handleChange = (e) => {
@@ -43,8 +47,8 @@ class CreateProject extends Component {
     };
 
     render() {
-
-        const { auth } = this.props
+        console.log(this.state)
+        const { auth, value } = this.props
         if (!auth.uid) return <Redirect to='/signin' />
 
         return (
@@ -85,8 +89,38 @@ class CreateProject extends Component {
                     <div className='input-field'>
                         <label htmlFor='balance'>Balance</label>
                         <input type='number' id='balance' onChange={this.handleChange} />
-                        <input type="radio" id="male" name="gender" value="male" />
                     </div>
+
+                    <div className="input-field">
+                        {/* <FormControl component="fieldset">
+                            <FormLabel component="legend">Category</FormLabel>
+                            <RadioGroup aria-label="gender" name="gender1" value={value} onChange={this.handleChange}>
+                                <FormControlLabel id='catvalue' value="female" control={<Radio />} label="Female" />
+                                <FormControlLabel value="male" control={<Radio />} label="Male" />
+                                <FormControlLabel value="other" control={<Radio />} label="Other" />
+                                <FormControlLabel value="disabled" disabled control={<Radio />} label="(Disabled option)" />
+                            </RadioGroup>
+                        </FormControl> */}
+                        <fieldset>
+                            <legend>Category</legend>
+                            <p>
+                                <label>
+                                    <input class="with-gap" name="gender" type="radio" id='catValue' value='PC' onChange={this.handleChange} />
+                                    <span>PC</span>
+                                </label><br/>
+                                <label>
+                                    <input class="with-gap" name="gender" type="radio" id='catValue' value='Accessory' onChange={this.handleChange} />
+                                    <span>Accessory</span>
+                                </label><br/>
+                                <label>
+                                    <input class="with-gap" name="gender" type="radio" id='catValue' value='Notebook' onChange={this.handleChange} />
+                                    <span>Notebook</span>
+                                </label>
+                            </p>
+                        </fieldset>
+
+                    </div>
+
 
 
                     <div className='input-field'>

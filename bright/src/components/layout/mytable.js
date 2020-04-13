@@ -13,7 +13,8 @@ import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { Button} from 'reactstrap';
-
+import PreviewPicture from '../projects/PreviewPicture'
+import FileUploader from "react-firebase-file-uploader";
 
 
 
@@ -85,12 +86,19 @@ const componentDidUpdate = () =>{
 
 const run = (props) => {
   Editt([props[0],props[1]]) 
-  setTimeout(function() { //Start the timer
+ /* setTimeout(function() { //Start the timer
     refreshPage()
-}.bind(this), 1500)
+}.bind(this), 1500)*/
   
 }
-
+const sendslip = () => {
+  return(
+  <div>
+   
+                   
+    </div>)
+  
+}
 class SimpleTable extends Component {
   
   constructor(props){
@@ -143,6 +151,14 @@ class SimpleTable extends Component {
     
   
   })
+ 
+  db.collection('Cart').doc(auth.uid).get().then(doc => {
+    
+    this.setState({c1:doc.data().Cart})
+      this.setState({c2:doc.data().Count})
+     
+  })
+  
   }
   
   
@@ -150,26 +166,61 @@ class SimpleTable extends Component {
     rowss:[],
     rowsss:[],
     sum:0,
-    au:''
+    au:'',
+    c1:[],C2:[],cnt1:[],cnt2:[],ul:[],
+    avatarURL:'',ans:''
 };
+handleUploadSuccess = filename => {
+  this.setState({ avatar: filename, progress: 100, isUploading: false });
+  firebase
+      .storage()
+      .ref("images")
+      .child(filename)
+      .getDownloadURL()
+      .then(url => this.setState({ avatarURL: url }));
+};
+
 checkout (props) {
-  const db = firebase.firestore();
-  db.settings({ timestampsInSnapshots: true });
-  getDoc = db.collection('Cart').doc(props.uid).get().then(doc => {
-    carts = doc.data().Cart
-    counts = doc.data().Count
-    db.collection('Order').doc(props.uid).set({
-      Cart: carts ,Count:counts,url:''
-    })
+let answer = ''
+let num = 0
+ 
+
+const db = firebase.firestore();
+  setTimeout(function() {
+    console.log(2)
+  }.bind(this), 2500)
+  console.log(this.state.c1)
+  this.state.c1.map((product,i) => {
+    if(num <this.state.c2.length)
+    answer+= product+"  :  "+this.state.c2[i]+','
+    this.setState({ans:this.state.ans+'  '+product+"  :  "+this.state.c2[i]})
+    console.log(this.state.ans)
+    num++
   })
-  setTimeout(function() { //Start the timer
-    db.collection('Cart').doc(props.uid).set({
-      Cart: [],Count:[]
+   
+  
+      
+      
+  
+
+
+  
+    db.collection('Order').doc(props.uid).set({
+      Cart:answer,url:this.state.avatarURL
+  
     })
-    setTimeout(function() { //Start the timer
+    db.collection('Cart').doc(props.uid).set({
+      Cart:[],Count:[]
+  
+    })
+
+  
+  setTimeout(function() {//Start the timer
+    
+   setTimeout(function() { //Start the timer
      refreshPage()
   }.bind(this), 1500)
-}.bind(this), 1500)
+}.bind(this), 3000)
   
   
 }
@@ -216,14 +267,26 @@ checkout (props) {
           <TableCell align="right"></TableCell>
             <TableCell align="right">ราคารวม {this.state.sum}</TableCell>
           
-          <TableCell  align="right"><Button disabled = {false} onClick = {() =>{this.checkout(auth)}}>สั่งซื้อ</Button></TableCell>
-         
+          <TableCell  align="right"><Button disabled = {this.state.avatarURL == '' || this.state.rowss.length == 0} onClick = {() =>{ this.checkout(auth)}}>สั่งซื้อ</Button></TableCell>
+          
           
           
 
         </TableBody>
       </Table>
+      <FileUploader
+                        accept="image/*"
+                        name="avatar"
+                        randomizeFilename
+                        storageRef={firebase.storage().ref("images")}
+                        onUploadStart={this.handleUploadStart}
+                        onUploadError={this.handleUploadError}
+                        onUploadSuccess={this.handleUploadSuccess}
+                        onProgress={this.handleProgress}
+                    />
+                     <PreviewPicture avatarURL={this.state.avatarURL} />
     </TableContainer>
+    
     
   );
             }
